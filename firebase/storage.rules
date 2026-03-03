@@ -1,0 +1,11 @@
+rules_version = '2';
+// items/*: read public (catalog images). Write/delete only admin.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /items/{itemId}/{fileName} {
+      allow read: if true;
+      allow write, delete: if request.auth != null
+        && firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data != null;
+    }
+  }
+}

@@ -1,0 +1,1014 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  CASINO UI — Baseline (Fase 0)
+  — Surfaces para legibilidade: body (app-bg), container principal desktop (lg:bg-white/95),
+    header sticky (hero-radial), cards (bg-white), drawer/modal (bg-white). Texto sempre sobre superfície clara.
+  — Limites de animação: loops 4–10s, opacidade baixa, sem piscar rápido; preferir transform/opacity.
+  — prefers-reduced-motion: desativar loops decorativos, manter só feedback de clique (scale/opacity curto).
+*/
+
+@layer base {
+  body {
+    @apply font-rubik antialiased;
+  }
+}
+
+/* Ensure we never flash white behind the app */
+html,
+body,
+#root {
+  min-height: 100%;
+  background-color: #2b0006;
+}
+
+/* CSS-only casino carpet: red rays + central burst + golden sparkles (caça-níqueis/roleta) */
+.casino-carpet-bg {
+  background-color: #8a000c;
+  background-image:
+    /* central bright burst */
+    radial-gradient(
+      ellipse 80% 70% at 50% 45%,
+      rgba(255, 80, 60, 0.35) 0%,
+      rgba(200, 20, 25, 0.2) 25%,
+      transparent 55%
+    ),
+    /* radiating red rays (conic wedges) */
+    conic-gradient(
+        from 0deg at 50% 45%,
+        #b80010 0deg 6deg,
+        #6b000a 6deg 12deg,
+        #b80010 12deg 18deg,
+        #6b000a 18deg 24deg,
+        #b80010 24deg 30deg,
+        #6b000a 30deg 36deg,
+        #b80010 36deg 42deg,
+        #6b000a 42deg 48deg,
+        #b80010 48deg 54deg,
+        #6b000a 54deg 60deg,
+        #b80010 60deg 66deg,
+        #6b000a 66deg 72deg,
+        #b80010 72deg 78deg,
+        #6b000a 78deg 84deg,
+        #b80010 84deg 90deg,
+        #6b000a 90deg 96deg,
+        #b80010 96deg 102deg,
+        #6b000a 102deg 108deg,
+        #b80010 108deg 114deg,
+        #6b000a 114deg 120deg,
+        #b80010 120deg 126deg,
+        #6b000a 126deg 132deg,
+        #b80010 132deg 138deg,
+        #6b000a 138deg 144deg,
+        #b80010 144deg 150deg,
+        #6b000a 150deg 156deg,
+        #b80010 156deg 162deg,
+        #6b000a 162deg 168deg,
+        #b80010 168deg 174deg,
+        #6b000a 174deg 180deg,
+        #b80010 180deg 186deg,
+        #6b000a 186deg 192deg,
+        #b80010 192deg 198deg,
+        #6b000a 198deg 204deg,
+        #b80010 204deg 210deg,
+        #6b000a 210deg 216deg,
+        #b80010 216deg 222deg,
+        #6b000a 222deg 228deg,
+        #b80010 228deg 234deg,
+        #6b000a 234deg 240deg,
+        #b80010 240deg 246deg,
+        #6b000a 246deg 252deg,
+        #b80010 252deg 258deg,
+        #6b000a 258deg 264deg,
+        #b80010 264deg 270deg,
+        #6b000a 270deg 276deg,
+        #b80010 276deg 282deg,
+        #6b000a 282deg 288deg,
+        #b80010 288deg 294deg,
+        #6b000a 294deg 300deg,
+        #b80010 300deg 306deg,
+        #6b000a 306deg 312deg,
+        #b80010 312deg 318deg,
+        #6b000a 318deg 324deg,
+        #b80010 324deg 330deg,
+        #6b000a 330deg 336deg,
+        #b80010 336deg 342deg,
+        #6b000a 342deg 348deg,
+        #b80010 348deg 354deg,
+        #6b000a 354deg 360deg
+      ),
+    /* golden glows */
+    radial-gradient(
+        280px 220px at 18% 20%,
+        rgba(255, 237, 0, 0.28) 0%,
+        rgba(255, 200, 50, 0.1) 40%,
+        transparent 65%
+      ),
+    radial-gradient(
+      300px 240px at 82% 18%,
+      rgba(255, 237, 0, 0.22) 0%,
+      rgba(255, 190, 40, 0.08) 42%,
+      transparent 68%
+    ),
+    radial-gradient(
+      320px 260px at 48% 78%,
+      rgba(255, 237, 0, 0.18) 0%,
+      rgba(255, 190, 40, 0.06) 48%,
+      transparent 72%
+    );
+  background-size: cover;
+  background-position: center;
+}
+
+.casino-carpet-vignette {
+  background: radial-gradient(
+    ellipse 120% 100% at 50% 40%,
+    rgba(0, 0, 0, 0.05) 0%,
+    rgba(0, 0, 0, 0.22) 58%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+/* scattered golden sparkles (brilhos amarelos) */
+.casino-carpet-sparkles {
+  background-image:
+    radial-gradient(
+      circle at 10% 15%,
+      rgba(255, 237, 0, 0.5) 0%,
+      rgba(255, 200, 50, 0.2) 25%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 28% 22%,
+      rgba(255, 237, 0, 0.4) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 45% 12%,
+      rgba(255, 237, 0, 0.35) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 62% 28%,
+      rgba(255, 237, 0, 0.42) 0%,
+      transparent 48%
+    ),
+    radial-gradient(
+      circle at 78% 14%,
+      rgba(255, 237, 0, 0.38) 0%,
+      transparent 44%
+    ),
+    radial-gradient(
+      circle at 92% 24%,
+      rgba(255, 237, 0, 0.35) 0%,
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 14% 68%,
+      rgba(255, 237, 0, 0.32) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 36% 82%,
+      rgba(255, 237, 0, 0.28) 0%,
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 58% 72%,
+      rgba(255, 237, 0, 0.3) 0%,
+      transparent 44%
+    ),
+    radial-gradient(
+      circle at 82% 78%,
+      rgba(255, 237, 0, 0.33) 0%,
+      transparent 46%
+    ),
+    radial-gradient(
+      circle at 22% 48%,
+      rgba(255, 237, 0, 0.25) 0%,
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 72% 52%,
+      rgba(255, 237, 0, 0.27) 0%,
+      transparent 40%
+    );
+  opacity: 0.85;
+}
+
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 320px 320px;
+}
+
+.contain-paint {
+  contain: layout paint style;
+}
+
+.casino-header-texture {
+  background-image:
+    radial-gradient(
+      120px 90px at 25% 35%,
+      rgba(255, 237, 0, 0.18) 0%,
+      transparent 65%
+    ),
+    radial-gradient(
+      160px 120px at 70% 20%,
+      rgba(255, 237, 0, 0.14) 0%,
+      transparent 70%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.08) 0 2px,
+      transparent 2px 14px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.18) 0 1px,
+      transparent 1px 16px
+    );
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-texture {
+  background-image:
+    radial-gradient(
+      140px 110px at 30% 25%,
+      rgba(227, 6, 19, 0.1) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      160px 130px at 75% 18%,
+      rgba(227, 6, 19, 0.08) 0%,
+      transparent 72%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.2) 0 2px,
+      transparent 2px 18px
+    );
+  background-size:
+    240px 240px,
+    280px 280px,
+    220px 220px;
+  background-position:
+    0 0,
+    40px 20px,
+    0 0;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+.modal-scroll-area {
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.formatted-text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.formatted-text b {
+  font-weight: 800;
+  color: #000;
+}
+.formatted-text i {
+  font-style: italic;
+}
+.formatted-text strike {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.funny-title {
+  font-family: "Marvin Visions", "Bungee", cursive;
+  text-shadow: 2px 2px 0 #e30613;
+  -webkit-text-stroke: 1px #e30613;
+}
+
+.card-shadow {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+/* Overlay mais suave para o drawer do orçamento */
+.drawer-overlay {
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+}
+
+.filter-btn {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  flex-shrink: 0;
+  min-width: 100px;
+}
+.filter-btn:not(.active) {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.filter-btn.active {
+  background-color: #e30613 !important;
+  color: #ffffff !important;
+  animation: pulse-active 2s infinite ease-in-out;
+  z-index: 10;
+  box-shadow:
+    0 2px 8px rgba(227, 6, 19, 0.35),
+    inset 0 2px 4px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 237, 0, 0.25);
+}
+.filter-btn:active {
+  transform: scale(0.98);
+}
+
+/* Chips scroll: snap + overflow hint (fade at edges) */
+.filter-chips-wrap {
+  overflow: hidden;
+}
+.filter-chips-scroll {
+  scroll-padding-inline: 1rem;
+}
+.filter-chips-wrap::before,
+.filter-chips-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 1rem;
+  width: 1.5rem;
+  pointer-events: none;
+  z-index: 5;
+}
+.filter-chips-wrap::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(255, 237, 0, 0.85), transparent);
+}
+.filter-chips-wrap::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(255, 237, 0, 0.85), transparent);
+}
+
+/* Catalog context bar (item count + cart hint) */
+.catalog-context-bar {
+  padding-inline: 0.125rem;
+}
+.catalog-list {
+  padding-bottom: 0.25rem;
+}
+
+.search-arcade:focus {
+  border-color: #e30613;
+  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.2);
+}
+
+.cta-jackpot {
+  box-shadow:
+    0 2px 12px rgba(227, 6, 19, 0.4),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+.cta-jackpot-whatsapp {
+  box-shadow:
+    0 2px 16px rgba(34, 197, 94, 0.45),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+.cta-jackpot-whatsapp:hover:not(:disabled) {
+  box-shadow:
+    0 4px 20px rgba(34, 197, 94, 0.5),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+/* Card sticker + ticket premium look: dual border (gold + red), subtle texture */
+.card-sticker {
+  position: relative;
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(180, 83, 9, 0.35),
+    0 0 0 3px rgba(227, 6, 19, 0.12);
+}
+.card-sticker::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+.card-sticker:hover {
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(180, 83, 9, 0.5),
+    0 0 0 3px rgba(227, 6, 19, 0.18);
+}
+@media (min-width: 1024px) {
+  .card-sticker:hover {
+    transform: translateY(-2px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-sticker:hover {
+    transform: none;
+  }
+}
+
+/* “Adicionado” state: subtle feedback, no animation when reduced motion */
+.card-cta-added {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Ticket notch (right edge): subtle scallop on list cards */
+.card-ticket-edge {
+  position: relative;
+}
+.card-ticket-edge::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.03));
+  border-radius: 0 1rem 1rem 0;
+  pointer-events: none;
+}
+
+/* Media area: shine overlay on hover */
+.card-media-wrap {
+  position: relative;
+}
+.card-media-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 237, 0, 0.08) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.card-media-wrap:hover::after {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-media-wrap::after {
+    transition: none;
+  }
+}
+
+/* CTA button on card: jackpot style (red + gold highlight) */
+.cta-card-jackpot {
+  box-shadow:
+    0 2px 8px rgba(227, 6, 19, 0.3),
+    inset 0 1px 0 rgba(255, 237, 0, 0.2);
+}
+.cta-card-jackpot:hover {
+  box-shadow:
+    0 4px 12px rgba(227, 6, 19, 0.4),
+    inset 0 1px 0 rgba(255, 237, 0, 0.3);
+}
+
+/* CTA shine (visible): apply on key CTAs */
+.cta-shine {
+  position: relative;
+  overflow: hidden;
+}
+.cta-shine::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0) 65%,
+    transparent 100%
+  );
+  transform: translateX(-120%) rotate(12deg);
+  animation: ctaShine 6.8s ease-in-out infinite;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}
+@keyframes ctaShine {
+  0% {
+    transform: translateX(-120%) rotate(12deg);
+  }
+  12% {
+    transform: translateX(120%) rotate(12deg);
+  }
+  100% {
+    transform: translateX(120%) rotate(12deg);
+  }
+}
+
+/* Casino scene overlays (more obvious than previous sparkles) */
+.casino-fallback-rays {
+  background-color: #6b000a;
+  /* Rays with pure CSS: instant render (no image dependency) */
+  background-image:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0) 48%
+    ),
+    conic-gradient(
+      from 0deg at 50% 50%,
+      #b80010 0deg 12deg,
+      #8a000c 12deg 24deg,
+      #b80010 24deg 36deg,
+      #8a000c 36deg 48deg,
+      #b80010 48deg 60deg,
+      #8a000c 60deg 72deg,
+      #b80010 72deg 84deg,
+      #8a000c 84deg 96deg,
+      #b80010 96deg 108deg,
+      #8a000c 108deg 120deg,
+      #b80010 120deg 132deg,
+      #8a000c 132deg 144deg,
+      #b80010 144deg 156deg,
+      #8a000c 156deg 168deg,
+      #b80010 168deg 180deg,
+      #8a000c 180deg 192deg,
+      #b80010 192deg 204deg,
+      #8a000c 204deg 216deg,
+      #b80010 216deg 228deg,
+      #8a000c 228deg 240deg,
+      #b80010 240deg 252deg,
+      #8a000c 252deg 264deg,
+      #b80010 264deg 276deg,
+      #8a000c 276deg 288deg,
+      #b80010 288deg 300deg,
+      #8a000c 300deg 312deg,
+      #b80010 312deg 324deg,
+      #8a000c 324deg 336deg,
+      #b80010 336deg 348deg,
+      #8a000c 348deg 360deg
+    );
+  background-size: cover;
+  background-position: center;
+}
+
+.casino-rays-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 250ms ease-out;
+}
+.casino-rays-image.is-loaded {
+  opacity: 1;
+}
+
+.casino-vignette {
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 40%,
+    transparent 0%,
+    transparent 45%,
+    rgba(0, 0, 0, 0.3) 85%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+.casino-hero-glow {
+  background: radial-gradient(
+    ellipse 120% 80% at 50% 15%,
+    rgba(255, 237, 0, 0.14) 0%,
+    rgba(255, 200, 50, 0.07) 28%,
+    transparent 62%
+  );
+}
+
+.casino-bg-sweep {
+  background: radial-gradient(
+    ellipse 90% 50% at 50% 20%,
+    rgba(255, 255, 255, 0.06) 0%,
+    transparent 60%
+  );
+  animation: bgSweep 10s ease-in-out infinite;
+  mix-blend-mode: screen;
+  opacity: 0.65;
+}
+@keyframes bgSweep {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.02);
+    opacity: 0.75;
+  }
+}
+
+.casino-sparkle2 {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 237, 0, 0.85) 0%,
+    rgba(255, 200, 60, 0.25) 30%,
+    transparent 70%
+  );
+  filter: blur(10px);
+  opacity: 0.25;
+  will-change: transform, opacity;
+}
+
+.casino-confetti {
+  position: absolute;
+  border-radius: 4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 237, 0, 0.9),
+    rgba(255, 180, 40, 0.7)
+  );
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  filter: blur(0.2px);
+  opacity: 0.25;
+  will-change: transform, opacity;
+}
+
+.casino-percent {
+  position: absolute;
+  font-weight: 900;
+  color: rgba(255, 237, 0, 0.22);
+  text-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  filter: blur(1.6px);
+  letter-spacing: -0.02em;
+  user-select: none;
+}
+
+@keyframes pulse-active {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(227, 6, 19, 0.35);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 8px rgba(227, 6, 19, 0);
+  }
+}
+
+.pulse-video {
+  animation: pulse-red 2s infinite;
+}
+@keyframes pulse-red {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(227, 6, 19, 0.5);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(227, 6, 19, 0);
+  }
+}
+
+/* Header hero: amarelo forte com radial suave em vermelho */
+.hero-radial {
+  background-color: #ffed00;
+  background-image: radial-gradient(
+    circle at 50% 0%,
+    rgba(227, 6, 19, 0.1) 0%,
+    transparent 50%
+  );
+}
+@media (min-width: 1024px) {
+  .hero-radial {
+    background-image: radial-gradient(
+      circle at 70% 0%,
+      rgba(227, 6, 19, 0.08) 0%,
+      transparent 45%
+    );
+  }
+}
+
+/* Header two-state: expanded (default) vs compact on scroll */
+.hero-header {
+  padding: 1.5rem 1rem 1rem;
+  transition: padding 0.25s ease, box-shadow 0.25s ease;
+}
+@media (min-width: 1024px) {
+  .hero-header {
+    padding: 1.5rem 2rem 1rem;
+  }
+}
+.hero-header__top {
+  max-height: 20rem;
+  transition: opacity 0.2s ease, max-height 0.25s ease, margin 0.25s ease;
+}
+.hero-header__brand,
+.hero-header__ribbon {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.hero-header--compact {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+@media (min-width: 1024px) {
+  .hero-header--compact {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+.hero-header--compact .hero-header__top {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+.hero-header--compact .hero-header__chips {
+  margin-top: 0;
+}
+.hero-header--compact .hero-header__search {
+  padding-bottom: 0.5rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-header,
+  .hero-header__top,
+  .hero-header__brand,
+  .hero-header__ribbon {
+    transition: none;
+  }
+}
+
+/* Sentinel for header compact (1px so IntersectionObserver has an area to observe) */
+.header-sentinel {
+  height: 1px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  overflow: hidden;
+  line-height: 0;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.snackbar-enter {
+  animation: fadeSlideIn 0.3s ease-out forwards;
+}
+
+@keyframes modalOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes modalContentSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes infoPulse {
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes drawerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes drawerSlideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Casino backdrop sparkles (CSS-only, low opacity, slow) */
+.casino-sparkle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 237, 0, 0.5) 0%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  opacity: 0.2;
+  will-change: opacity;
+}
+.casino-sparkle-1 {
+  width: 80px;
+  height: 80px;
+  top: 12%;
+  left: 10%;
+  animation: sparkleTwinkle 8s ease-in-out infinite;
+}
+.casino-sparkle-2 {
+  width: 60px;
+  height: 60px;
+  top: 25%;
+  right: 15%;
+  animation: sparkleTwinkle 7s ease-in-out 1s infinite;
+}
+.casino-sparkle-3 {
+  width: 100px;
+  height: 100px;
+  bottom: 30%;
+  left: 20%;
+  animation: sparkleTwinkle 9s ease-in-out 2s infinite;
+}
+.casino-sparkle-4 {
+  width: 50px;
+  height: 50px;
+  bottom: 20%;
+  right: 25%;
+  animation: sparkleTwinkle 6s ease-in-out 0.5s infinite;
+}
+.casino-sparkle-5 {
+  width: 70px;
+  height: 70px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: sparkleTwinkle 10s ease-in-out 3s infinite;
+}
+@keyframes sparkleTwinkle {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes glowBreath {
+  0%,
+  100% {
+    opacity: 0.8;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+}
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Shine sweep for ribbon / CTA (low intensity, 6–10s) */
+@keyframes shineSweep {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.4;
+  }
+  15% {
+    transform: translateX(100%) skewX(-12deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(100%) skewX(-12deg);
+    opacity: 0;
+  }
+}
+.ribbon-shine {
+  overflow: hidden;
+  position: relative;
+}
+.hero-ribbon-ticket {
+  border-radius: 1.75rem;
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 6px rgba(180, 83, 9, 0.18);
+  transform: translateY(-1px);
+}
+.hero-ribbon-ticket {
+  position: relative;
+}
+.hero-ribbon-ticket::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 1.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+}
+.hero-ribbon-ticket::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, 0.22), transparent 62%),
+    radial-gradient(120% 90% at 50% 100%, rgba(180, 83, 9, 0.12), transparent 58%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 35%, rgba(180, 83, 9, 0.06));
+  opacity: 0.55;
+  pointer-events: none;
+  mix-blend-mode: normal;
+}
+.ribbon-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 40%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.25) 60%,
+    transparent 100%
+  );
+  transform: translateX(-100%) skewX(-12deg);
+  width: 50%;
+  animation: shineSweep 8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ribbon-shine::after {
+    animation: none;
+  }
+  .casino-sparkle-1,
+  .casino-sparkle-2,
+  .casino-sparkle-3,
+  .casino-sparkle-4,
+  .casino-sparkle-5 {
+    animation: none;
+  }
+  .filter-btn.active {
+    animation: none;
+  }
+  .filter-btn:active {
+    transform: none;
+  }
+  .arcade-toggle button {
+    transition: none;
+  }
+  .pulse-video {
+    animation: none;
+  }
+  .cta-shine::after {
+    animation: none;
+  }
+  .casino-bg-sweep {
+    animation: none;
+  }
+  .casino-rays-image {
+    transition: none;
+  }
+}
