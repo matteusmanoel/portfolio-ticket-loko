@@ -830,6 +830,34 @@ body,
   }
 }
 
+/* Image loading skeleton — shimmer (reduced-motion: no animation) */
+@keyframes imageSkeletonShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.image-skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 0%,
+    #f3f4f6 40%,
+    #e5e7eb 50%,
+    #f3f4f6 60%,
+    #e5e7eb 100%
+  );
+  background-size: 200% 100%;
+  animation: imageSkeletonShimmer 1.5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .image-skeleton-shimmer {
+    animation: none;
+    background: #e5e7eb;
+  }
+}
+
 /* Casino backdrop sparkles (CSS-only, low opacity, slow) */
 .casino-sparkle {
   position: absolute;

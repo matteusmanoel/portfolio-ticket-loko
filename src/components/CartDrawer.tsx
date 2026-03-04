@@ -6,6 +6,7 @@ import { useCartStore } from '@/features/cart/cartStore'
 import { buildRequestMessage, getWhatsAppUrl } from '@/features/whatsapp/buildMessage'
 import { getStoredVendor, getVendorFromQuery } from '@/features/vendor/vendorFromQuery'
 import { getDisplayImage } from '@/utils/attractionImage'
+import { ImageWithSkeleton } from '@/components/ImageWithSkeleton'
 import type { Attraction } from '@/types/catalog'
 
 const PLACEHOLDER_IMG = '/no-image.svg'
@@ -136,13 +137,13 @@ export function CartDrawer({ open, onClose, catalogItems = [], onOpenItemDetail,
                     className={`bg-white rounded-2xl border-2 border-gray-100 shadow-sm overflow-hidden flex flex-col ${isClickable ? 'cursor-pointer hover:border-red-300 active:scale-[0.99] transition-all' : ''}`}
                   >
                     <div className="flex gap-3 p-3">
-                      <div className="w-20 h-20 flex-shrink-0 rounded-xl bg-gray-100 overflow-hidden">
-                        <img
+                      <div className={`w-20 h-20 flex-shrink-0 rounded-xl bg-gray-100 overflow-hidden relative ${imgSrc === PLACEHOLDER_IMG ? 'flex items-center justify-center' : ''}`}>
+                        <ImageWithSkeleton
                           src={imgSrc}
                           alt=""
-                          className="w-full h-full object-cover"
+                          imgClassName="object-cover"
+                          isPlaceholder={imgSrc === PLACEHOLDER_IMG}
                           loading="lazy"
-                          decoding="async"
                           onError={() => setImgErrorIds((prev) => new Set(prev).add(it.id))}
                         />
                       </div>

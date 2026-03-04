@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { signInWithGoogle, signInWithEmailPassword } from '@/services/firebase'
+import { login, isAdminConfigured } from '@/services/adminAuth'
 
 interface AdminLoginProps {
   onSuccess?: () => void
@@ -10,37 +10,38 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleGoogle = async () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!username.trim() || !password) return
     setLoading(true)
     setError(null)
-    try {
-      await signInWithGoogle()
+    const ok = login(username.trim(), password)
+    if (ok) {
       onSuccess?.()
       navigate('/admin')
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Erro ao entrar.')
-    } finally {
-      setLoading(false)
+    } else {
+      setError('Usuário ou senha incorretos.')
     }
+    setLoading(false)
   }
 
-  const handleEmailPassword = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email.trim() || !password) return
-    setLoading(true)
-    setError(null)
-    try {
-      await signInWithEmailPassword(email.trim(), password)
-      onSuccess?.()
-      navigate('/admin')
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Erro ao entrar.')
-    } finally {
-      setLoading(false)
-    }
+  if (!isAdminConfigured()) {
+    return (
+      <div className="min-h-screen bg-[#fffde7] flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl shadow-2xl border-4 border-amber-400 p-8 max-w-sm w-full text-center">
+          <h1 className="font-black text-amber-700 uppercase text-lg mb-2">
+            Admin não configurado
+          </h1>
+          <p className="text-sm text-gray-500">
+            Defina <code className="bg-gray-100 px-1 rounded">VITE_ADMIN_USER</code> e{' '}
+            <code className="bg-gray-100 px-1 rounded">VITE_ADMIN_PASSWORD</code> no arquivo .env
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -50,19 +51,20 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
           Admin Ticket Loko
         </h1>
         <p className="text-sm text-gray-500 mb-6">
-          Entre com sua conta para gerenciar o catálogo.
+          Entre com usuário e senha para gerenciar o catálogo.
         </p>
         {error && (
           <p className="text-red-700 text-sm mb-4 bg-red-50 p-3 rounded-xl">{error}</p>
         )}
-        <form onSubmit={handleEmailPassword} className="space-y-3 mb-4">
+        <form onSubmit={handleSubmit} className="space-y-3">
           <input
-            type="email"
-            placeholder="E-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            placeholder="Usuário"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-brand-red focus:outline-none text-sm"
             required
+            autoComplete="username"
           />
           <input
             type="password"
@@ -71,28 +73,16 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-brand-red focus:outline-none text-sm"
             required
+            autoComplete="current-password"
           />
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-brand-red text-white py-3 rounded-2xl font-bold disabled:opacity-50 hover:bg-brand-red-hover"
           >
-            {loading ? 'Entrando...' : 'Entrar com e-mail'}
+            {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
-        <div className="flex items-center gap-2 my-4">
-          <div className="flex-1 border-t border-gray-200" />
-          <span className="text-xs text-gray-400">ou</span>
-          <div className="flex-1 border-t border-gray-200" />
-        </div>
-        <button
-          type="button"
-          onClick={handleGoogle}
-          disabled={loading}
-          className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 disabled:opacity-50"
-        >
-          Entrar com Google
-        </button>
       </div>
     </div>
   )

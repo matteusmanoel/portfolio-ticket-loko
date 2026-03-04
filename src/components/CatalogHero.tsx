@@ -7,7 +7,7 @@ import {
   Search,
 } from "lucide-react";
 import { FilterChips } from "@/components/FilterChips";
-import { HeroRibbon } from "@/components/HeroRibbon";
+// import { HeroRibbon } from "@/components/HeroRibbon";
 import type { Category } from "@/types/catalog";
 
 /** Decorative percentages (subtle, blurred) — hero only */
@@ -103,17 +103,17 @@ export function CatalogHero({
             )}
           </button>
         </div>
-        <div className="hero-header__brand bg-white rounded-2xl shadow-xl px-6 py-3 mb-2 border-2 border-red-200">
+        <div className="hero-header__brand px-6 py-3 mb-2">
           <img
             src="/Logo%20TL.png"
             alt="Ticket Loko"
-            className="hero-header__logo h-9 sm:h-11 w-auto max-w-[180px] sm:max-w-[240px] object-contain"
+            className="hero-header__logo h-20 sm:h-28 w-auto max-w-[320px] sm:max-w-[400px] object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)] drop-shadow-[0_4px_16px_rgba(0,0,0,0.15)]"
             decoding="async"
           />
         </div>
-        <div className="hero-header__ribbon">
+        {/* <div className="hero-header__ribbon">
           <HeroRibbon />
-        </div>
+        </div> */}
       </div>
 
       <div className="w-full max-w-[980px] mx-auto hero-header__chips">

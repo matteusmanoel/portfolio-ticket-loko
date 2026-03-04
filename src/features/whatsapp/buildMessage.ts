@@ -2,19 +2,20 @@ import type { CartItem } from '@/types/catalog'
 
 export function buildRequestMessage(items: CartItem[], groupDetails: string): string {
   const lines: string[] = [
-    'Olá! 👋',
+    'Olá!',
     '',
-    'Vi o catálogo e gostaria de solicitar orçamento para os seguintes itens: 🎟️',
+    'Adorei o catálogo! Poderia me enviar orçamento para estes itens?',
     '',
   ]
   items.forEach((it, i) => {
     lines.push(`${i + 1}. ${it.name}`)
   })
+  const groupText = groupDetails.trim() || 'Não informado.'
   lines.push('')
-  lines.push('*Composição do grupo:* 👥')
-  lines.push(groupDetails.trim() || 'Não informado.')
+  lines.push('*Composição do grupo:*')
+  lines.push(groupText)
   lines.push('')
-  lines.push('Aguardo retorno. Obrigado(a)! 🙏')
+  lines.push('Desde já agradeço! Fico no aguardo do retorno.')
   return lines.join('\n').trim()
 }
 

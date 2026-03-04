@@ -37,7 +37,20 @@ export function getCustomCategoriesForFilter(): string[] {
   }
 }
 
-/** Normalize category for consistent comparison (trim + NFKC). */
+/** Normalize category for consistent comparison (trim + NFKC + lowercase). */
 export function normalizeCategory(c: string): string {
-  return String(c ?? '').trim().normalize('NFKC')
+  return String(c ?? '').trim().normalize('NFKC').toLowerCase()
+}
+
+/**
+ * Verifica se a categoria do item corresponde ao filtro.
+ * Aceita singular/plural (ex.: "Transporte" no DB corresponde ao filtro "Transportes").
+ */
+export function categoryMatchesFilter(itemCategory: string, filterCategory: string): boolean {
+  const a = normalizeCategory(itemCategory)
+  const b = normalizeCategory(filterCategory)
+  if (a === b) return true
+  // singular <-> plural: "transporte" <-> "transportes", "restaurante" <-> "restaurantes"
+  if (a + 's' === b || a === b + 's') return true
+  return false
 }

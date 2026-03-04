@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth, isAdmin } from '@/services/firebase'
+import { isAdminConfigured, isAdminSession } from '@/services/adminAuth'
 
-type AuthStatus = 'loading' | 'unauthenticated' | 'forbidden' | 'admin'
+type AuthStatus = 'loading' | 'not_configured' | 'unauthenticated' | 'admin'
 
 interface AdminGuardProps {
   children: React.ReactNode
@@ -22,7 +21,7 @@ export function AdminGuard({
     try {
       const url = new URL(window.location.href)
       if (url.searchParams.get('devAdmin') === '1') {
-        localStorage.setItem('tl_dev_admin', '1')
+        sessionStorage.setItem('tl_admin_session', '1')
       }
     } catch {
       /* ignore */
@@ -31,22 +30,28 @@ export function AdminGuard({
 
   const devBypass =
     import.meta.env.DEV &&
-    (typeof window !== 'undefined' &&
-      (localStorage.getItem('tl_dev_admin') === '1' ||
-        new URLSearchParams(window.location.search).get('devAdmin') === '1'))
+    typeof window !== 'undefined' &&
+    (sessionStorage.getItem('tl_admin_session') === '1' ||
+      new URLSearchParams(window.location.search).get('devAdmin') === '1')
 
   if (devBypass) return <>{children}</>
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        setStatus('unauthenticated')
+    const update = () => {
+      if (!isAdminConfigured()) {
+        setStatus('not_configured')
         return
       }
-      const admin = await isAdmin(user.uid)
-      setStatus(admin ? 'admin' : 'forbidden')
-    })
-    return unsub
+      setStatus(isAdminSession() ? 'admin' : 'unauthenticated')
+    }
+    update()
+    const onAuthChange = () => update()
+    window.addEventListener('tl_admin_login', onAuthChange)
+    window.addEventListener('tl_admin_logout', onAuthChange)
+    return () => {
+      window.removeEventListener('tl_admin_login', onAuthChange)
+      window.removeEventListener('tl_admin_logout', onAuthChange)
+    }
   }, [])
 
   if (status === 'loading') {
@@ -56,7 +61,7 @@ export function AdminGuard({
       </div>
     )
   }
+  if (status === 'not_configured') return <>{fallbackForbidden}</>
   if (status === 'unauthenticated') return <>{fallbackLogin}</>
-  if (status === 'forbidden') return <>{fallbackForbidden}</>
   return <>{children}</>
 }

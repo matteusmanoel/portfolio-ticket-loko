@@ -1,9 +1,11 @@
+import { useState, useEffect } from 'react'
 import { Clock, LogOut, PlayCircle, Info } from 'lucide-react'
 import type { Attraction } from '@/types/catalog'
 import { formatWhatsAppText } from '@/utils/formatText'
 import { getAllImages } from '@/utils/attractionImage'
 import { Modal } from './Modal'
 import { ImageCarousel } from './ImageCarousel'
+import { ImageWithSkeleton } from './ImageWithSkeleton'
 
 const PLACEHOLDER_IMG = '/no-image.svg'
 
@@ -28,6 +30,10 @@ export function ItemDetailModal({
   isInCart,
   onWatchVideo,
 }: ItemDetailModalProps) {
+  const [mainImageError, setMainImageError] = useState(false)
+  useEffect(() => {
+    if (item) setMainImageError(false)
+  }, [item?.id])
   if (!item) return null
 
   const isTransport = item.category === 'Transportes'
@@ -48,15 +54,17 @@ export function ItemDetailModal({
       {allImages.length > 1 ? (
         <ImageCarousel images={allImages} alt={item.name} className="w-full" />
       ) : (
-        <img
-          src={allImages[0] || item.img || PLACEHOLDER_IMG}
-          alt=""
-          className="w-full h-64 lg:aspect-video lg:h-auto object-cover"
-          decoding="async"
-          onError={(e) => {
-            e.currentTarget.src = PLACEHOLDER_IMG
-          }}
-        />
+        <div className={`relative w-full h-64 lg:aspect-video lg:h-auto bg-gray-100 overflow-hidden ${mainImageError || (!allImages[0] && !item.img) ? 'flex items-center justify-center' : ''}`}>
+          <ImageWithSkeleton
+            src={allImages[0] || item.img || PLACEHOLDER_IMG}
+            alt=""
+            className="absolute inset-0"
+            imgClassName="object-cover"
+            isPlaceholder={mainImageError || (!allImages[0] && !item.img)}
+            loading="eager"
+            onError={() => setMainImageError(true)}
+          />
+        </div>
       )}
       {item.video && (
         <button

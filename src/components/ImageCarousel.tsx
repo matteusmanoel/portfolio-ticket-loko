@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
+import { ImageWithSkeleton } from './ImageWithSkeleton'
 
 interface ImageCarouselProps {
   images: string[]
@@ -14,8 +15,6 @@ export function ImageCarousel({ images, alt = '', className = '' }: ImageCarouse
   const [errorIndices, setErrorIndices] = useState<Set<number>>(new Set())
 
   const urls = images.length ? images : [PLACEHOLDER]
-  const displayUrl = (src: string, i: number) =>
-    errorIndices.has(i) ? PLACEHOLDER : src
 
   useEffect(() => {
     const el = scrollRef.current
@@ -44,21 +43,24 @@ export function ImageCarousel({ images, alt = '', className = '' }: ImageCarouse
         className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth"
         style={{ scrollbarWidth: 'none' }}
       >
-        {urls.map((src, i) => (
-          <div
-            key={`${src}-${i}`}
-            className="w-full flex-shrink-0 snap-center aspect-[4/3] lg:aspect-video bg-gray-100"
-          >
-            <img
-              src={displayUrl(src, i)}
-              alt={alt ? `${alt} ${i + 1}` : ''}
-              className="w-full h-full object-cover"
-              loading={i === 0 ? 'eager' : 'lazy'}
-              decoding="async"
-              onError={() => setErrorIndices((prev) => new Set(prev).add(i))}
-            />
-          </div>
-        ))}
+        {urls.map((src, i) => {
+          const isPlaceholder = errorIndices.has(i) || (urls.length === 1 && src === PLACEHOLDER)
+          return (
+            <div
+              key={`${src}-${i}`}
+              className={`w-full flex-shrink-0 snap-center aspect-[4/3] lg:aspect-video bg-gray-100 ${isPlaceholder ? 'flex items-center justify-center' : ''}`}
+            >
+              <ImageWithSkeleton
+                src={isPlaceholder || errorIndices.has(i) ? PLACEHOLDER : src}
+                alt={alt ? `${alt} ${i + 1}` : ''}
+                imgClassName="object-cover"
+                isPlaceholder={isPlaceholder}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                onError={() => setErrorIndices((prev) => new Set(prev).add(i))}
+              />
+            </div>
+          )
+        })}
       </div>
       {urls.length > 1 && (
         <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2 lg:gap-2.5">

@@ -3,6 +3,7 @@ import { Play, Plus, Check, Info } from 'lucide-react'
 import type { Attraction } from '@/types/catalog'
 import { plainText } from '@/utils/formatText'
 import { getDisplayImage } from '@/utils/attractionImage'
+import { ImageWithSkeleton } from './ImageWithSkeleton'
 
 const PLACEHOLDER_IMG = '/no-image.svg'
 
@@ -50,13 +51,13 @@ export function CatalogCard({
         className="card-sticker card-ticket-edge cv-auto contain-paint w-full bg-white rounded-3xl overflow-hidden border-0 cursor-pointer relative text-left transform active:scale-[0.98] transition-all hover:border-0 flex flex-col"
         aria-label={`Ver detalhes: ${item.name}`}
       >
-        <div className="card-media-wrap relative w-full aspect-square lg:aspect-[4/3] bg-gray-100 overflow-hidden rounded-t-3xl">
-          <img
+        <div className={`card-media-wrap relative w-full aspect-square lg:aspect-[4/3] bg-gray-100 overflow-hidden rounded-t-3xl ${imgError ? 'flex items-center justify-center' : ''}`}>
+          <ImageWithSkeleton
             src={imgSrc}
             alt=""
-            className="w-full h-full object-cover"
+            imgClassName="object-cover"
+            isPlaceholder={imgError}
             loading="lazy"
-            decoding="async"
             onError={() => setImgError(true)}
           />
           <div
@@ -136,13 +137,13 @@ export function CatalogCard({
       className="card-sticker card-ticket-edge w-full min-h-[140px] lg:min-h-[160px] bg-white rounded-2xl overflow-hidden border-0 cursor-pointer text-left transform active:scale-[0.98] transition-all hover:border-0 flex"
       aria-label={`Ver detalhes: ${item.name}`}
     >
-      <div className="card-media-wrap relative w-36 h-36 lg:w-44 lg:h-44 flex-shrink-0 bg-gray-100 overflow-hidden rounded-l-2xl">
-        <img
+      <div className={`card-media-wrap relative w-36 h-36 lg:w-44 lg:h-44 flex-shrink-0 bg-gray-100 overflow-hidden rounded-l-2xl ${imgError ? 'flex items-center justify-center' : ''}`}>
+        <ImageWithSkeleton
           src={imgSrc}
           alt=""
-          className="w-full h-full object-cover"
+          imgClassName="object-cover"
+          isPlaceholder={imgError}
           loading="lazy"
-          decoding="async"
           onError={() => setImgError(true)}
         />
       </div>
