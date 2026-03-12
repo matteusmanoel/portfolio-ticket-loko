@@ -111,9 +111,6 @@ export function CatalogHero({
             decoding="async"
           />
         </div>
-        {/* <div className="hero-header__ribbon">
-          <HeroRibbon />
-        </div> */}
       </div>
 
       <div className="w-full max-w-[980px] mx-auto hero-header__chips">

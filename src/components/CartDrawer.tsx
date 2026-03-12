@@ -176,8 +176,8 @@ export function CartDrawer({ open, onClose, catalogItems = [], onOpenItemDetail,
             </>
           )}
         </div>
-        <div className="p-6 bg-white border-t space-y-4">
-          <div className="bg-gray-50 p-4 rounded-2xl border-2 border-gray-100">
+        <div className="p-4 bg-white border-t space-y-3">
+          <div className="rounded-lg overflow-hidden">
             <ExpandableTextarea
               id="group-details"
               label="Informações do Grupo"
@@ -188,6 +188,7 @@ export function CartDrawer({ open, onClose, catalogItems = [], onOpenItemDetail,
               className="border-0 bg-transparent text-sm text-gray-700 focus:outline-none resize-none shadow-none"
               expandModalTitle="Informações do Grupo"
               placeholder="Ex: 1 adulto inteira, 1 adulto estudante, 1 maior de 60 anos, 1 criança de 7 anos"
+              compact
             />
           </div>
           {!canRequest && items.length > 0 && (

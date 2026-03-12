@@ -13,9 +13,12 @@ import { CatalogCard } from "@/components/CatalogCard";
 import { CasinoBackground } from "@/components/CasinoBackground";
 import { CatalogHero } from "@/components/CatalogHero";
 import { CatalogSkeleton } from "@/components/CatalogSkeleton";
-import { CartFooter } from "@/components/CartFooter";
+import { CatalogFooter } from "@/components/CatalogFooter";
 import { EmptyState } from "@/components/EmptyState";
+import { PickupPointsModal } from "@/components/PickupPointsModal";
+import { QuickLinksBar } from "@/components/QuickLinksBar";
 import { Snackbar, type SnackbarVariant } from "@/components/Snackbar";
+import { PICKUP_POINTS } from "@/data/pickupPoints";
 import { subscribeCatalog } from "@/services/catalogRepo";
 import { useCartStore } from "@/features/cart/cartStore";
 import {
@@ -36,7 +39,7 @@ const CartDrawer = lazy(() =>
   import("@/components/CartDrawer").then((m) => ({ default: m.CartDrawer })),
 );
 
-const LIST_ROW_HEIGHT = 200;
+const LIST_ROW_HEIGHT = 240;
 
 export function CatalogPage() {
   const reducedMotion = useReducedMotion();
@@ -50,6 +53,7 @@ export function CatalogPage() {
   const [detailItem, setDetailItem] = useState<Attraction | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [pickupModalOpen, setPickupModalOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarVariant, setSnackbarVariant] =
     useState<SnackbarVariant>("added");
@@ -60,9 +64,9 @@ export function CatalogPage() {
   const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
     try {
       const stored = localStorage.getItem("catalog-view-mode");
-      return stored === "grid" ? "grid" : "list";
+      return stored === "list" ? "list" : "grid";
     } catch {
-      return "list";
+      return "grid";
     }
   });
 
@@ -225,6 +229,13 @@ export function CatalogPage() {
     setSnackbarOpen(true);
   };
 
+  const handleQuickRemove = (item: Attraction) => {
+    removeItem(item.id);
+    setSnackbarVariant("removed");
+    setSnackbarMessage("Item removido do orçamento.");
+    setSnackbarOpen(true);
+  };
+
   const enableMotion = !reducedMotion && filtered.length <= 24;
 
   const gridContainerVariants = {
@@ -256,6 +267,19 @@ export function CatalogPage() {
             cartCount={cartItems.length}
             onOpenCart={() => setCartOpen(true)}
           />
+
+          {/* Desktop: quick links (Instagram, YouTube, Onde retirar) — footer só no mobile */}
+          <div
+            className="hidden lg:flex items-stretch justify-center gap-2 py-3 px-4 border-b border-red-100 bg-white/80"
+            role="navigation"
+            aria-label="Redes e pontos de retirada"
+          >
+            <QuickLinksBar
+              onOpenPickup={() => setPickupModalOpen(true)}
+              showPickup={PICKUP_POINTS.length > 0}
+              variant="desktop"
+            />
+          </div>
 
           <main className="flex-1 w-full mx-auto px-4 lg:px-8 py-4 pb-32 lg:pb-10 lg:pt-6 max-w-[980px]">
             {catalogState.status === "loading" && <CatalogSkeleton />}
@@ -314,6 +338,7 @@ export function CatalogPage() {
                               variant="list"
                               onClick={() => handleOpenDetail(item)}
                               onQuickAdd={() => handleQuickAdd(item)}
+                              onQuickRemove={() => handleQuickRemove(item)}
                               onWatchVideo={() => handleCardWatchVideo(item)}
                               isInCart={cartIdSet.has(item.id)}
                             />
@@ -386,6 +411,7 @@ export function CatalogPage() {
                               variant={viewMode}
                               onClick={() => handleOpenDetail(item)}
                               onQuickAdd={() => handleQuickAdd(item)}
+                              onQuickRemove={() => handleQuickRemove(item)}
                               onWatchVideo={() => handleCardWatchVideo(item)}
                               isInCart={cartIdSet.has(item.id)}
                             />
@@ -397,6 +423,7 @@ export function CatalogPage() {
                               variant={viewMode}
                               onClick={() => handleOpenDetail(item)}
                               onQuickAdd={() => handleQuickAdd(item)}
+                              onQuickRemove={() => handleQuickRemove(item)}
                               onWatchVideo={() => handleCardWatchVideo(item)}
                               isInCart={cartIdSet.has(item.id)}
                             />
@@ -410,15 +437,21 @@ export function CatalogPage() {
             )}
           </main>
 
-          {/* Mobile: footer CTA + drawer */}
+          {/* Mobile: footer 50/50 Encontre-nos + Ver Orçamento */}
           <div className="lg:hidden">
-            <CartFooter
-              count={cartItems.length}
-              onOpen={() => setCartOpen(true)}
+            <CatalogFooter
+              cartCount={cartItems.length}
+              onOpenCart={() => setCartOpen(true)}
+              onOpenPickup={() => setPickupModalOpen(true)}
             />
           </div>
         </div>
       </div>
+
+      <PickupPointsModal
+        open={pickupModalOpen}
+        onClose={() => setPickupModalOpen(false)}
+      />
 
       <Suspense fallback={null}>
         <CartDrawer
@@ -459,6 +492,7 @@ export function CatalogPage() {
         onAction={
           snackbarVariant === "added" ? () => setCartOpen(true) : undefined
         }
+        duration={2000}
       />
     </div>
   );
