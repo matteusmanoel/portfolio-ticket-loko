@@ -1,5 +1,6 @@
 export const PICKUP_WHATSAPP = '554535214040'
 export const PICKUP_WHATSAPP_DISPLAY = '(45) 3521 4040'
+export const PICKUP_WHATSAPP_URL = `https://wa.me/${PICKUP_WHATSAPP}`
 export const PICKUP_WHATSAPP_HINT =
   'Consulte o horário de funcionamento através do nosso WhatsApp ' + PICKUP_WHATSAPP_DISPLAY
 

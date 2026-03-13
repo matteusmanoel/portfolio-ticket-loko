@@ -2,7 +2,8 @@ import { useEffect } from 'react'
 import { X, MapPin, ExternalLink } from 'lucide-react'
 import {
   PICKUP_POINTS,
-  PICKUP_WHATSAPP_HINT,
+  PICKUP_WHATSAPP_DISPLAY,
+  PICKUP_WHATSAPP_URL,
   getMapsUrlForPlaceId,
 } from '@/data/pickupPoints'
 
@@ -91,7 +92,17 @@ export function PickupPointsModal({ open, onClose }: PickupPointsModalProps) {
                 </div>
               </div>
               <div className="px-4 pb-3 space-y-2">
-                <p className="text-[11px] text-gray-500">{PICKUP_WHATSAPP_HINT}</p>
+                <p className="text-[11px] text-gray-500">
+                  Consulte o horário de funcionamento através do nosso WhatsApp{' '}
+                  <a
+                    href={PICKUP_WHATSAPP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-brand-red font-semibold underline hover:text-brand-red-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-1 rounded"
+                  >
+                    {PICKUP_WHATSAPP_DISPLAY}
+                  </a>
+                </p>
                 <a
                   href={getMapsUrlForPlaceId(point.placeId)}
                   target="_blank"
