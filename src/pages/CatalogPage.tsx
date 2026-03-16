@@ -349,9 +349,10 @@ export function CatalogPage() {
                   </div>
                 ) : viewMode === "grid" || filtered.length === 0 ? (
                   <motion.div
+                    key={`catalog-grid-${filter}-${viewMode}`}
                     className={
                       viewMode === "grid"
-                        ? "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 catalog-grid"
+                        ? "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 catalog-grid min-h-0"
                         : "space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 lg:grid-cols-1"
                     }
                     variants={enableMotion ? gridContainerVariants : undefined}

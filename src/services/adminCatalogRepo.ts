@@ -32,7 +32,7 @@ export async function createItem(payload: AttractionPayload): Promise<string> {
     open: payload.open ?? '',
     close: payload.close ?? '',
     active: payload.active !== false,
-    order: payload.order,
+    order: typeof payload.order === 'number' ? payload.order : 0,
     updatedAt: serverTimestamp(),
   })
   return ref.id

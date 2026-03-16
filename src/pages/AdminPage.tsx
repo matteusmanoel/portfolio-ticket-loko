@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Plus, Pencil, Trash2, ChevronLeft, ChevronRight, Link2, Search } from 'lucide-react'
 import { logout } from '@/services/adminAuth'
 import { subscribeCatalog } from '@/services/catalogRepo'
@@ -109,6 +109,7 @@ function VendorLinkGeneratorModal({
 }
 
 export function AdminPage() {
+  const navigate = useNavigate()
   const [items, setItems] = useState<Attraction[]>([])
   const [loading, setLoading] = useState(true)
   const [formOpen, setFormOpen] = useState(false)
@@ -201,7 +202,10 @@ export function AdminPage() {
         </Link>
         <button
           type="button"
-          onClick={() => logout()}
+          onClick={() => {
+            logout()
+            navigate('/', { replace: true })
+          }}
           className="text-sm text-gray-500 hover:text-gray-700"
         >
           Sair
